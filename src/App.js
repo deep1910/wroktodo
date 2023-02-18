@@ -3,6 +3,16 @@ import './App.css';
 import Form from "./components/Form";
 import TodoList from "./components/TodoLIst";
 
+//Notes
+import Sidebar from "./components/Sidebar"
+import Editor from "./components/Editor"
+import {data} from "./data"
+import Split from "react-split"
+import {nanoid} from "nanoid"
+
+
+
+
 
 function App() {
   
@@ -64,6 +74,38 @@ function App() {
 
 
 
+//Notes
+  const [notes, setNotes] = React.useState([])
+  const [currentNoteId, setCurrentNoteId] = React.useState(
+      (notes[0] && notes[0].id) || ""
+  )
+  
+  function createNewNote() {
+      const newNote = {
+          id: nanoid(),
+          body: "# Type your markdown note's title here"
+      }
+      setNotes(prevNotes => [newNote, ...prevNotes])
+      setCurrentNoteId(newNote.id)
+  }
+  
+  function updateNote(text) {
+      setNotes(oldNotes => oldNotes.map(oldNote => {
+          return oldNote.id === currentNoteId
+              ? { ...oldNote, body: text }
+              : oldNote
+      }))
+  }
+  
+  function findCurrentNote() {
+      return notes.find(note => {
+          return note.id === currentNoteId
+      }) || notes[0]
+  }
+  
+///////////////////////////////////
+
+
 
 
 
@@ -75,11 +117,10 @@ function App() {
       </header>
       <Form todos={todos} setTodos={setTodos} setInputText={setInputText} inputText={inputText}  setStatus={setStatus}/>
       <TodoList  filterTodos={filterTodos}   todos={todos} setTodos={setTodos} />
-     
-     
-     
-     
-      {/* {
+      <div className="notes">
+
+
+       {
             notes.length > 0 
             ?
             <Split 
@@ -112,7 +153,9 @@ function App() {
                     Create one now
                 </button>
             </div>
-        } */}
+        }
+
+      </div>
 
 
 
